@@ -68,6 +68,18 @@ async function migrateUsersData() {
     const items = await dbV3(source)
       .limit(BATCH_SIZE)
       .offset(page * BATCH_SIZE);
+
+    // Removed fields, doenst exists in v4
+    items.forEach((item) => {
+      delete item.blogs
+      delete item.first_name
+      delete item.job_function
+      delete item.last_name
+      delete item.linkedin_url
+      delete item.phone
+      delete item.position
+    });
+
     const migratedItems = migrateItems(items, ({ role, ...item }) =>
       migrateItem(item)
     );

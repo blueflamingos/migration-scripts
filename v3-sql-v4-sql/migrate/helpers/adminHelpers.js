@@ -56,9 +56,15 @@ async function migrateAdminPermissions() {
       ...item,
       action: migrateUids(item.action),
       subject: migrateSubject(item.subject),
-      properties: migrateProperties(item.properties),
-      conditions: JSON.stringify(item.conditions),
+      // { "fields": } added to properties and JSON.parse for [/"username/"]
+      properties: { fields: JSON.parse(item.fields) },
+      // Removed JSON.stringify for [/"username/"]
+      conditions: item.conditions,
     }));
+
+    // Removed fields, doenst exists in v4
+    migratedItems.forEach((item) => delete item.fields);
+    
     const roleLinks = items.map((item) => ({
       permission_id: item.id,
       role_id: item.role,

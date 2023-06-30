@@ -16,12 +16,12 @@ const { migrateI18n } = require("./migrateI18n");
 const { migrateComponents } = require("./migrateComponents");
 
 const migrations = [
-  migrateCoreStore,
-  migrateAdmin,
-  migrateUsers,
+  // migrateCoreStore,
+  // migrateAdmin,
+  // migrateUsers,
   migrateCustom,
-  migrateWebhooks,
-  migrateI18n,
+  // migrateWebhooks,
+  // migrateI18n,
   migrateFiles,
 ];
 
@@ -32,6 +32,7 @@ async function migrate() {
 
   if (isMYSQL) {
     await dbV4.raw("SET FOREIGN_KEY_CHECKS=0;");
+    await dbV4.raw("SET NAMES utf8mb4;");
   }
   let tables = [];
 
@@ -65,7 +66,7 @@ async function migrate() {
     (table) => !processedTables.includes(table)
   );
 
-  await migrateComponents.migrateTables(unprocessedTables);
+  // await migrateComponents.migrateTables(unprocessedTables);
 
   processedTables.push(...migrateComponents.processedTables);
 
